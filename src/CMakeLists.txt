@@ -12,4 +12,5 @@ endif()
 # Add Executable
 add_library(libsvmpp ${LIBSVMPP_SOURCE_FILES})
 target_include_directories(libsvmpp PUBLIC ${PROJECT_SOURCE_DIR}/libsvmpp)
+target_include_directories(libsvmpp PUBLIC ${PROJECT_SOURCE_DIR}/libsvm)
 
