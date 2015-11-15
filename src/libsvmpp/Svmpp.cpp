@@ -128,14 +128,20 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::predict(const Query & _query, std::vector<double> &_probs) const {
-		double *probs;
+		double *probs = new double[mModel.nr_class];
 		svm_predict_probability(&mModel, _query.node(), probs);
 		
+		int maxIndex;
+		double maxProb=0;
 		for (unsigned i = 0; i < mModel.nr_class;i++) {
 			_probs.push_back(probs[i]);
+			if (maxProb < probs[i]) {
+				maxProb = probs[i];
+				maxIndex = 0;
+			}
 		}
 
-		return *std::max_element(_probs.begin(), _probs.end());
+		return maxIndex;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------

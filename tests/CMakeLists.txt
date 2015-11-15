@@ -4,3 +4,4 @@ project(libsvmpp)
 # Project directory
 add_subdirectory(linearKernel)
 add_subdirectory(rbfKernel)
+add_subdirectory(probabilities)
