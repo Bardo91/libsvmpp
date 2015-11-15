@@ -37,14 +37,15 @@ int main(int _argc, char **_argv) {
 	params.weight_label = nullptr;
 	params.weight = nullptr;
 
+	// Train
 	svm.train(params, set);
 	
-	
-	Query query({2,2}, 1);
-	
-	double res = svm.predict(query);
-
+	// Test
+	Query query1({2,2});
+	double res = svm.predict(query1);
 	assert(res == 1);
 
-	return 1;
+	Query query2({0,0});
+	res = svm.predict(query2);
+	assert(res == 0);
 }
