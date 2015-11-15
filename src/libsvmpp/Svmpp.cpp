@@ -28,6 +28,7 @@
 #include "Svmpp.h"
 
 #include <cassert>
+#include <algorithm>
 
 namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
@@ -126,15 +127,20 @@ namespace svmpp {
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
-	double Svm::predict(const Query & _query, double * _probs) const {
-		// 666 Not implemented yet.
-		return 0.0;
+	double Svm::predict(const Query & _query, std::vector<double> &_probs) const {
+		double *probs;
+		svm_predict_probability(&mModel, _query.node(), probs);
+		
+		for (unsigned i = 0; i < mModel.nr_class;i++) {
+			_probs.push_back(probs[i]);
+		}
+
+		return *std::max_element(_probs.begin(), _probs.end());
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
 	bool Svm::hasProbabilities() const {
-		// 666 Not implemented yet.
-		return false;
+		return svm_check_probability_model(&mModel);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------

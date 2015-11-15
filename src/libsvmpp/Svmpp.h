@@ -86,7 +86,7 @@ namespace svmpp {
 		double predict(const Query &_query) const;
 		
 		///
-		double predict(const Query &_query, double *_probs) const;
+		double predict(const Query &_query, std::vector<double> &_probs) const;
 
 		///
 		bool hasProbabilities() const;
