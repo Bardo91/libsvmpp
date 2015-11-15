@@ -15,11 +15,11 @@ int main(int _argc, char **_argv) {
 	TrainSet set;
 
 	for (unsigned i = 0; i < 90; i++) {
-		set.addEntry({2*cos(4*(i*3.1416/180)), 2*sin(4*(i*3.1416/180))}, 0);
+		set.addEntry({0.5*cos(4*(i*3.1416/180)), 0.5*sin(4*(i*3.1416/180))}, 0);
 	}
 	
 	for (unsigned i = 0; i < 90; i++) {
-		set.addEntry({0.5*cos(4*(i*3.1416/180)), 0.5*sin(4*(i*3.1416/180))}, 1);
+		set.addEntry({2.0*cos(4*(i*3.1416/180)), 2.0*sin(4*(i*3.1416/180))}, 1);
 	}
 
 	Svm svm;
@@ -46,12 +46,12 @@ int main(int _argc, char **_argv) {
 	Query query1({0,0});
 	std::vector<double> probs1;
 	double res1 = svm.predict(query1, probs1);
-	//assert(res1 == 1);
-	//assert(probs1[0] < probs1[1]);
+	assert(res1 == 0);
+	assert(probs1[0] > probs1[1]);
 
-	Query query2({3,3});
+	Query query2({5,5});
 	std::vector<double> probs2;
 	double res2 = svm.predict(query2, probs2);
-	//assert(res2 == 0);
-	//assert(probs2[1] < probs2[0]);
+	assert(res2 == 1);
+	assert(probs2[1] > probs2[0]);
 }

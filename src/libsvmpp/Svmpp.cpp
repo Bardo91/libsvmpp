@@ -137,7 +137,7 @@ namespace svmpp {
 			_probs.push_back(probs[i]);
 			if (maxProb < probs[i]) {
 				maxProb = probs[i];
-				maxIndex = 0;
+				maxIndex = i;
 			}
 		}
 
