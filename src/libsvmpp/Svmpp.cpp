@@ -106,33 +106,34 @@ namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
 	// Svm class
 	//-----------------------------------------------------------------------------------------------------------------
-	void Svm::save(std::string _file) const {
-		// 666 Not implemented yet.
+	bool Svm::save(std::string _file) const {
+		return svm_save_model(_file.c_str(), mModel) != -1;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
-	void Svm::load(std::string _file) {
-		// 666 Not implemented yet.
+	bool Svm::load(std::string _file) {
+		mModel = svm_load_model(_file.c_str());
+		return mModel != nullptr;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
 	void Svm::train(const Params & _params, const TrainSet & _trainSet) {
-		mModel = *svm_train(&(_trainSet.problem()), &_params);
+		mModel = svm_train(&(_trainSet.problem()), &_params);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::predict(const Query & _query) const {
-		return svm_predict(&mModel, _query.node());
+		return svm_predict(mModel, _query.node());
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::predict(const Query & _query, std::vector<double> &_probs) const {
-		double *probs = new double[mModel.nr_class];
-		svm_predict_probability(&mModel, _query.node(), probs);
+		double *probs = new double[mModel->nr_class];
+		svm_predict_probability(mModel, _query.node(), probs);
 		
 		int maxIndex;
 		double maxProb=0;
-		for (unsigned i = 0; i < mModel.nr_class;i++) {
+		for (unsigned i = 0; i < mModel->nr_class;i++) {
 			_probs.push_back(probs[i]);
 			if (maxProb < probs[i]) {
 				maxProb = probs[i];
@@ -145,7 +146,7 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	bool Svm::hasProbabilities() const {
-		return svm_check_probability_model(&mModel);
+		return svm_check_probability_model(mModel);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------

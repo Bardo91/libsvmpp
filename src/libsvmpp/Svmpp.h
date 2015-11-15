@@ -74,10 +74,10 @@ namespace svmpp {
 		typedef svm_parameter Params;
 
 		/// Save SVM into a file.
-		void save(std::string _file) const;
+		bool save(std::string _file) const;
 
 		/// Load SVM from a file.
-		void load(std::string _file);
+		bool load(std::string _file);
 
 		/// Train SVM with the given dataset.
 		void train(const Params &_params, const TrainSet &_trainSet);
@@ -95,7 +95,7 @@ namespace svmpp {
 	private:
 		typedef svm_model	Model;
 
-		Model	mModel;
+		Model	*mModel;
 		Params	mParams;
 	};
 
