@@ -1,8 +1,28 @@
-//
-//
-//
-//
-//
+//////////////////////////////////////////////////////////////////////////////////////////
+//																						//
+//	The MIT License (MIT)																//
+//																						//
+//	Copyright (c) 2015 Pablo Ramon Soria												//
+//																						//
+//	Permission is hereby granted, free of charge, to any person obtaining a copy		//
+//	of this software and associated documentation files (the "Software"), to deal		//
+//	in the Software without restriction, including without limitation the rights		//
+//	to use, copy, modify, merge, publish, distribute, sublicense, and/or sell			//
+//	copies of the Software, and to permit persons to whom the Software is				//
+//	furnished to do so, subject to the following conditions:							//
+//																						//
+//	The above copyright notice and this permission notice shall be included in all		//
+//	copies or substantial portions of the Software.										//
+//																						//
+//	THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR			//
+//	IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,			//
+//	FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE			//
+//	AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER				//
+//	LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,		//
+//	OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE		//
+//	SOFTWARE.																			//
+//																						//
+//////////////////////////////////////////////////////////////////////////////////////////
 
 
 #ifndef LIBSVMPP_SVMPP_H_
@@ -20,24 +40,25 @@ namespace svmpp {
 	public:
 		typedef svm_problem Problem;
 		
-		bool addEntry(double *_x, double _y);
-		bool addEntry(const std::vector<double> &_x, double _y);
+		void addEntry(double *_x, double _y);
+		void addEntry(const std::vector<double> &_x, double _y);
 
-		bool addEntries(const std::vector<std::vector<double>> &_X, const std::vector<double> &_Y);
+		void addEntries(const std::vector<std::vector<double>> &_X, const std::vector<double> &_Y);
 
 		Problem problem() const;
 	private:
-		Problem mProblem;
+		std::vector<std::vector<double>>	mX;
+		std::vector<double>					mY;
 	};	// Struct TrainSet
 
 
 	//-----------------------------------------------------------------------------------------------------------------
 	struct Query {
 	public:
-		typedef svm_node Node;
+		typedef svm_node *Node;
 
-		Query(double *_x, double _y);
-		Query(const std::vector<double> &_x, double _y);
+		Query(double *_x);
+		Query(const std::vector<double> &_x);
 
 		Node node() const;
 	private:
