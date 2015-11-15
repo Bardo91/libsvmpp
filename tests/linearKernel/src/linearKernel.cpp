@@ -31,16 +31,11 @@ using namespace std;
 using namespace svmpp;
 
 int main(int _argc, char **_argv) {
-	vector<double> x1 = {0,0};
-	vector<double> x2 = {0,1};
-	vector<double> x3 = {1,0};
-	vector<double> x4 = {1,1};
-
 	TrainSet set;
-	set.addEntry(x1, 0);
-	set.addEntry(x2, 0);
-	set.addEntry(x3, 0);
-	set.addEntry(x4, 1);
+	set.addEntry({0,0}, 0);
+	set.addEntry({0,1}, 0);
+	set.addEntry({1,0}, 0);
+	set.addEntry({1,1}, 1);
 
 	Svm svm;
 

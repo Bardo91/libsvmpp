@@ -40,7 +40,7 @@ namespace svmpp {
 	public:
 		typedef svm_problem Problem;
 		
-		void addEntry(double *_x, double _y);
+		void addEntry(double *_x, unsigned _dimension, double _y);
 		void addEntry(const std::vector<double> &_x, double _y);
 
 		void addEntries(const std::vector<std::vector<double>> &_X, const std::vector<double> &_Y);
@@ -57,7 +57,7 @@ namespace svmpp {
 	public:
 		typedef svm_node *Node;
 
-		Query(double *_x);
+		Query(double *_x, unsigned _dimension);
 		Query(const std::vector<double> &_x);
 
 		Node node() const;
