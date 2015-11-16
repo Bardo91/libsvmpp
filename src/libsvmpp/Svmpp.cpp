@@ -128,6 +128,7 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::predict(const Query & _query, std::vector<double> &_probs) const {
+		assert(hasProbabilities());
 		double *probs = new double[mModel->nr_class];
 		svm_predict_probability(mModel, _query.node(), probs);
 		
