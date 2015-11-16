@@ -51,6 +51,11 @@ namespace svmpp {
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
+	std::vector<double> TrainSet::labels() const {
+		return mY;
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------
 	TrainSet::Problem TrainSet::problem() const {
 		Problem problem;
 		
@@ -120,6 +125,16 @@ namespace svmpp {
 	void Svm::train(const Params & _params, const TrainSet & _trainSet) {
 		mParams = _params;
 		mModel = svm_train(&(_trainSet.problem()), &_params);
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------
+	void Svm::trainAuto(const TrainSet & _trainSet, const Params & _initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid>& _paramGrids) {
+
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------
+	double Svm::crossValidation(const Params & _params, const TrainSet & _trainSet) {
+		return 0.0;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------

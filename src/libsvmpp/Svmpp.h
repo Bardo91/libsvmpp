@@ -46,6 +46,8 @@ namespace svmpp {
 
 		void addEntries(const std::vector<std::vector<double>> &_X, const std::vector<double> &_Y);
 
+		std::vector<double> labels() const;
+
 		Problem problem() const;
 	private:
 		std::vector<std::vector<double>>	mX;
@@ -81,8 +83,7 @@ namespace svmpp {
 	private:
 		double mMin, mMax, mStep;
 		Type mType;
-		
-	};
+	}; // Struct ParamGrid
 
 	//-----------------------------------------------------------------------------------------------------------------
 	/// SVM wrapper of libsvm svm implementation.
@@ -102,6 +103,9 @@ namespace svmpp {
 
 		/// Automatic tuning of parameters.
 		void trainAuto(const TrainSet &_trainSet, const Params &_initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid> &_paramGrids);
+
+		/// Validate set of parameters by Cross Validation of a training set
+		double crossValidation(const Params &_params, const TrainSet &_trainSet);
 
 		///
 		double predict(const Query &_query) const;
