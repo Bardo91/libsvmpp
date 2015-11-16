@@ -32,6 +32,7 @@
 
 #include <string>
 #include <vector>
+#include <unordered_map>
 
 namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
@@ -65,6 +66,23 @@ namespace svmpp {
 		Node mNode;
 	};	// Struct Query
 
+	//-----------------------------------------------------------------------------------------------------------------
+	struct ParamGrid {
+	public:
+		enum class Type {C, Gamma, Degree, Coeff0, Nu};
+
+		ParamGrid(Type _type, double _min, double _max, double _step) :mMin(_min), mMax(_max), mStep(_step), mType(_type) {}
+
+		double min()	const	{return mMin;	}
+		double max()	const	{return mMax;	}
+		double step()	const	{return mStep;	}
+
+		Type type()		const	{return mType;	}
+	private:
+		double mMin, mMax, mStep;
+		Type mType;
+		
+	};
 
 	//-----------------------------------------------------------------------------------------------------------------
 	/// SVM wrapper of libsvm svm implementation.
@@ -81,6 +99,9 @@ namespace svmpp {
 
 		/// Train SVM with the given dataset.
 		void train(const Params &_params, const TrainSet &_trainSet);
+
+		/// Automatic tuning of parameters.
+		void trainAuto(const TrainSet &_trainSet, const Params &_initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid> &_paramGrids);
 
 		///
 		double predict(const Query &_query) const;
