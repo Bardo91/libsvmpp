@@ -71,7 +71,7 @@ namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
 	struct ParamGrid {
 	public:
-		enum class Type {C, Gamma, Degree, Coeff0, Nu};
+		enum class Type {C, Gamma, Degree, Coeff0};
 
 		ParamGrid(Type _type, double _min, double _max, double _step) :mMin(_min), mMax(_max), mStep(_step), mType(_type) {}
 
@@ -102,7 +102,7 @@ namespace svmpp {
 		void train(const Params &_params, const TrainSet &_trainSet);
 
 		/// Automatic tuning of parameters.
-		void trainAuto(const TrainSet &_trainSet, const Params &_initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid> &_paramGrids);
+		void trainAuto(const TrainSet &_trainSet, const Params &_initialParams,const std::vector<ParamGrid> &_paramGrids);
 
 		/// Validate set of parameters by Cross Validation of a training set
 		double crossValidation(const Params &_params, const TrainSet &_trainSet, int _nFolds = 10);
@@ -117,6 +117,10 @@ namespace svmpp {
 		bool hasProbabilities() const;
 
 		Params params() const;
+	private:
+		double recursiveTrain(const TrainSet &_trainSet, std::vector<ParamGrid> _grids, Params _init, Params &_best);
+		void setParam(Params &_params, ParamGrid::Type _type, double _value);
+	
 	private:
 		typedef svm_model	Model;
 

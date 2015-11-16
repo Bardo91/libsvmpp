@@ -29,6 +29,7 @@
 
 #include <cassert>
 #include <algorithm>
+#include <functional>
 
 namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
@@ -128,13 +129,16 @@ namespace svmpp {
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
-	void Svm::trainAuto(const TrainSet & _trainSet, const Params & _initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid>& _paramGrids) {
+	void Svm::trainAuto(const TrainSet & _trainSet, const Params & _initialParams, const std::vector<ParamGrid> &_paramGrids) {
+		Params best;
+		recursiveTrain(_trainSet, _paramGrids, _initialParams, best);
 
+		train(best, _trainSet);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::crossValidation(const Params & _params, const TrainSet & _trainSet, int _nFolds) {
-		double *labels = nullptr;
+		double *labels = new double[_trainSet.labels().size()];
 		svm_cross_validation(&_trainSet.problem(), &_params, _nFolds, labels);
 
 		double successRate = 0;
@@ -179,6 +183,62 @@ namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
 	Svm::Params Svm::params() const {
 		return mParams;
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------
+	// Private Interface
+	double Svm::recursiveTrain(const TrainSet &_trainSet, std::vector<ParamGrid> _grids, Params _init, Params & _best) {
+		// Get first grid to this level loop.
+		ParamGrid grid = _grids[0];
+
+		// Init variables 
+		Params bestParams;
+		double bestScore = 0;
+
+		// go over params of this grid
+		for (double param = grid.min(); param < grid.max();param *= grid.step()) {
+			// Set params of this step of the grid
+			Params init = _init;
+			setParam(init, grid.type(), param);
+			Params currentParams;
+			double score;
+
+			// If it is not last grid on the list, go one step deeper
+			if (_grids.size() != 1) {
+				score = recursiveTrain(_trainSet, std::vector<ParamGrid>(_grids.begin()+1, _grids.end()), init, currentParams);
+			}
+			else {	// Else, train with this parameters
+				score = crossValidation(init, _trainSet);
+				currentParams = init;
+			}
+
+			// Get best score and params
+			if (score > bestScore) {
+				bestScore = score;
+				bestParams = currentParams;
+			}
+		}
+		// Save best param on argument and return score.
+		_best = bestParams;
+		return bestScore;
+	}
+
+	//-----------------------------------------------------------------------------------------------------------------
+	void Svm::setParam(Params & _params, ParamGrid::Type _type, double _value) {
+		switch (_type) {
+		case ParamGrid::Type::C:
+			_params.C = _value;
+			break;
+		case ParamGrid::Type::Gamma:
+			_params.gamma = _value;
+			break;
+		case ParamGrid::Type::Degree:
+			_params.degree = _value;
+			break;
+		case ParamGrid::Type::Coeff0:
+			_params.coef0 = _value;
+			break;
+		}
 	}
 
 }	// namespace svmpp
