@@ -133,8 +133,18 @@ namespace svmpp {
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
-	double Svm::crossValidation(const Params & _params, const TrainSet & _trainSet) {
-		return 0.0;
+	double Svm::crossValidation(const Params & _params, const TrainSet & _trainSet, int _nFolds) {
+		double *labels = nullptr;
+		svm_cross_validation(&_trainSet.problem(), &_params, _nFolds, labels);
+
+		double successRate = 0;
+		auto groundTruth = _trainSet.labels();
+		for (unsigned i = 0; i < groundTruth.size(); i++) {
+			if(labels[i] == groundTruth[i])
+				successRate++;
+		}
+		
+		return successRate/groundTruth.size();
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------

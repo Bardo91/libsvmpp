@@ -105,7 +105,7 @@ namespace svmpp {
 		void trainAuto(const TrainSet &_trainSet, const Params &_initialParams, const std::unordered_map<ParamGrid::Type, ParamGrid> &_paramGrids);
 
 		/// Validate set of parameters by Cross Validation of a training set
-		double crossValidation(const Params &_params, const TrainSet &_trainSet);
+		double crossValidation(const Params &_params, const TrainSet &_trainSet, int _nFolds = 10);
 
 		///
 		double predict(const Query &_query) const;
