@@ -66,7 +66,7 @@ namespace svmpp {
 		}
 
 		// Set data
-		int dims = mX[0].size();
+		unsigned dims = mX[0].size();
 		problem.x = new svm_node*[problem.l];
 		for (unsigned i = 0; i < mX.size(); i++) {
 			problem.x[i] = new svm_node[dims+1];
@@ -89,7 +89,7 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	Query::Query(const std::vector<double>& _x) {
-		int dims = _x.size();
+		unsigned dims = _x.size();
 		mNode = new svm_node[dims+1];
 		for (unsigned i = 0; i < dims; i++) {
 			mNode[i].index = i;
@@ -135,7 +135,7 @@ namespace svmpp {
 		
 		int maxIndex;
 		double maxProb=0;
-		for (unsigned i = 0; i < mModel->nr_class;i++) {
+		for (int i = 0; i < mModel->nr_class;i++) {
 			_probs.push_back(probs[i]);
 			if (maxProb < probs[i]) {
 				maxProb = probs[i];
@@ -148,7 +148,7 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	bool Svm::hasProbabilities() const {
-		return svm_check_probability_model(mModel);
+		return svm_check_probability_model(mModel) == 1;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
