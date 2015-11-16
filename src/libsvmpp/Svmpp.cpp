@@ -118,6 +118,7 @@ namespace svmpp {
 
 	//-----------------------------------------------------------------------------------------------------------------
 	void Svm::train(const Params & _params, const TrainSet & _trainSet) {
+		mParams = _params;
 		mModel = svm_train(&(_trainSet.problem()), &_params);
 	}
 
