@@ -76,11 +76,15 @@ namespace svmpp {
 		problem.x = new svm_node*[problem.l];
 		for (unsigned i = 0; i < mX.size(); i++) {
 			problem.x[i] = new svm_node[dims+1];
+			int filledIndex = 0;
 			for (unsigned j = 0; j < dims; j++) {
-				problem.x[i][j].index = j;
-				problem.x[i][j].value = mX[i][j];
+				if (mX[i][j] != 0) {
+					problem.x[i][filledIndex].index = j;
+					problem.x[i][filledIndex].value = mX[i][j];
+					filledIndex++;
+				}
 			}
-			problem.x[i][dims].index = -1;
+			problem.x[i][filledIndex].index = -1;
 		}
 
 		return problem;
@@ -97,11 +101,15 @@ namespace svmpp {
 	Query::Query(const std::vector<double>& _x) {
 		unsigned dims = _x.size();
 		mNode = new svm_node[dims+1];
+		int filledIndex=0;
 		for (unsigned i = 0; i < dims; i++) {
-			mNode[i].index = i;
-			mNode[i].value = _x[i];
+			if (_x[i] != 0) {
+				mNode[filledIndex].index = i;
+				mNode[filledIndex].value = _x[i];
+				filledIndex++;
+			}
 		}
-		mNode[dims].index = -1;
+		mNode[filledIndex].index = -1;
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
