@@ -133,7 +133,8 @@ namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
 	void Svm::train(const Params & _params, const TrainSet & _trainSet) {
 		mParams = _params;
-		mModel = svm_train(&(_trainSet.problem()), &_params);
+		auto problem = _trainSet.problem();
+		mModel = svm_train(&problem, &_params);
 	}
 
 	//-----------------------------------------------------------------------------------------------------------------
@@ -147,7 +148,8 @@ namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
 	double Svm::crossValidation(const Params & _params, const TrainSet & _trainSet, int _nFolds) {
 		double *labels = new double[_trainSet.labels().size()];
-		svm_cross_validation(&_trainSet.problem(), &_params, _nFolds, labels);
+		auto problem = _trainSet.problem();
+		svm_cross_validation(&problem, &_params, _nFolds, labels);
 
 		double successRate = 0;
 		auto groundTruth = _trainSet.labels();
