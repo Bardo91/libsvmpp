@@ -30,6 +30,7 @@
 #include <cassert>
 #include <algorithm>
 #include <functional>
+#include <fstream>
 
 namespace svmpp {
 	//-----------------------------------------------------------------------------------------------------------------
@@ -137,9 +138,11 @@ namespace svmpp {
 		mModel = svm_train(&problem, &_params);
 	}
 
+	static std::ofstream sAutoTrainFile;
 	//-----------------------------------------------------------------------------------------------------------------
 	void Svm::trainAuto(const TrainSet & _trainSet, const Params & _initialParams, const std::vector<ParamGrid> &_paramGrids) {
 		Params best;
+		sAutoTrainFile.open("svmpp_autotrain_log.txt");
 		recursiveTrain(_trainSet, _paramGrids, _initialParams, best);
 
 		train(best, _trainSet);
@@ -219,6 +222,8 @@ namespace svmpp {
 			}
 			else {	// Else, train with this parameters
 				score = crossValidation(init, _trainSet);
+				sAutoTrainFile << "Score: " << score << "\t C: " << init.C << "\t gamma: " << init.gamma << "\t degree: " << init.degree << "\t coef0: " << init.coef0 << std::endl;
+				sAutoTrainFile.flush();
 				currentParams = init;
 			}
 
